@@ -3,7 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Minecraftサーバーツールについて</title>    <style>
+    <title>Minecraftサーバーツールについて</title>
+    <style>
       :root {
         --primary-color: #6c5ce7;
         --secondary-color: #a8e6cf;
@@ -13,7 +14,7 @@
         --bg-card: #f8f9fa;
         --shadow-color: rgba(108, 92, 231, 0.1);
       }
-      
+
       body {
         font-family: "メイリオ", "Yu Gothic", "Helvetica", sans-serif;
         line-height: 1.6;
@@ -23,7 +24,7 @@
         display: flex;
         background: linear-gradient(135deg, #f6f8ff 0%, #ffffff 100%);
       }
-        .toc {
+      .toc {
         width: 200px;
         height: 100vh;
         overflow-y: auto;
@@ -100,7 +101,7 @@
       }
 
       h2::before {
-        content: '';
+        content: "";
         position: absolute;
         left: 0;
         top: 50%;
@@ -127,14 +128,24 @@
       }
 
       .highlight {
-        background: linear-gradient(120deg, var(--secondary-color) 0%, rgba(168, 230, 207, 0.3) 100%);
+        background: linear-gradient(
+          120deg,
+          var(--secondary-color) 0%,
+          rgba(168, 230, 207, 0.3) 100%
+        );
         padding: 2px 8px;
         border-radius: 4px;
         color: var(--primary-color);
         font-weight: bold;
       }
       .note {
-        background: linear-gradient(to right, var(--accent-color) 0%, var(--accent-color) 4px, var(--bg-light) 4px, var(--bg-light) 100%);
+        background: linear-gradient(
+          to right,
+          var(--accent-color) 0%,
+          var(--accent-color) 4px,
+          var(--bg-light) 4px,
+          var(--bg-light) 100%
+        );
         padding: 20px;
         margin: 20px 0;
         border-radius: 8px;
@@ -186,7 +197,8 @@
         padding: 15px;
         margin: 10px 0;
       }
-    </style>  </head>
+    </style>
+  </head>
   <body>
     <nav class="toc">
       <ul class="toc-list">
@@ -203,7 +215,9 @@
         <li class="toc-item">
           <a href="#howto" class="toc-link">使い方の流れ</a>
           <ul class="toc-list toc-subitem">
-            <li><a href="#server-setup" class="toc-link">サーバーを作る人</a></li>
+            <li>
+              <a href="#server-setup" class="toc-link">サーバーを作る人</a>
+            </li>
             <li><a href="#client-setup" class="toc-link">参加する人</a></li>
           </ul>
         </li>
@@ -221,216 +235,221 @@
 
     <main class="content">
       <h1 id="overview">Minecraftサーバーツールの分かりやすい説明</h1>
+      <div class="card">
+        <h2>このツールで何ができるの？</h2>
+        <p>
+          友達とMinecraftで遊ぶために必要な「サーバー」を、簡単な操作で作れるツールです。
+          普通ならコンピュータの難しい設定が必要ですが、このツールを使えばボタンを押すだけで準備できます。
+        </p>
+      </div>
 
-      <div class="card" id="overview">
-      <h2>このツールで何ができるの？</h2>
-      <p>
-        友達とMinecraftで遊ぶために必要な「サーバー」を、簡単な操作で作れるツールです。
-        普通ならコンピュータの難しい設定が必要ですが、このツールを使えばボタンを押すだけで準備できます。
-      </p>
-    </div>
+      <div class="card">
+        <h2 id="required-software">必要なソフトについて</h2>
+        <p>
+          このツールを使うには、2つの便利なソフトをインストールする必要があります：
+        </p>
 
-    <div class="card">      <h2 id="required-software">必要なソフトについて</h2>
-      <p>
-        このツールを使うには、2つの便利なソフトをインストールする必要があります：
-      </p>
+        <h3 id="docker">1. Docker（ドッカー）とは？</h3>
+        <p>
+          Dockerは、Minecraftサーバーを簡単に動かすためのソフトです。
+          これがあると：
+        </p>
+        <ul>
+          <li>サーバーの準備が簡単</li>
+          <li>パソコンが壊れても簡単に復旧</li>
+          <li>新しいバージョンへの更新が楽</li>
+        </ul>
+        <p>
+          例えるなら、「引っ越しの時に家具や荷物を全部コンテナに詰めておく」みたいなものです。
+          必要なものが全部まとまっているので、新しい場所でもすぐに使えます。
+        </p>
 
-      <h3 id="docker">1. Docker（ドッカー）とは？</h3>
-      <p>
-        Dockerは、Minecraftサーバーを簡単に動かすためのソフトです。
-        これがあると：
-      </p>
-      <ul>
-        <li>サーバーの準備が簡単</li>
-        <li>パソコンが壊れても簡単に復旧</li>
-        <li>新しいバージョンへの更新が楽</li>
-      </ul>
-      <p>
-        例えるなら、「引っ越しの時に家具や荷物を全部コンテナに詰めておく」みたいなものです。
-        必要なものが全部まとまっているので、新しい場所でもすぐに使えます。
-      </p>
+        <div class="accordion">
+          <button class="accordion-button">
+            📦 Dockerについてもっと詳しく
+          </button>
+          <div class="accordion-content">
+            <div class="detail-box">
+              <h4>なぜDockerが必要？</h4>
+              <p>
+                Minecraftサーバーを動かすには、たくさんの設定や準備が必要です。Dockerを使うと：
+              </p>
+              <ul>
+                <li>Java（プログラムを動かすためのソフト）の設定が不要</li>
+                <li>メモリやCPUの設定が自動で最適化</li>
+                <li>サーバーの設定ファイルが自動で作成</li>
+                <li>バックアップが簡単</li>
+              </ul>
+              <p>これらの複雑な作業を全部Dockerが自動でやってくれます！</p>
 
-      <div class="accordion">
-        <button class="accordion-button">📦 Dockerについてもっと詳しく</button>
-        <div class="accordion-content">
-          <div class="detail-box">
-            <h4>なぜDockerが必要？</h4>
-            <p>
-              Minecraftサーバーを動かすには、たくさんの設定や準備が必要です。Dockerを使うと：
-            </p>
-            <ul>
-              <li>Java（プログラムを動かすためのソフト）の設定が不要</li>
-              <li>メモリやCPUの設定が自動で最適化</li>
-              <li>サーバーの設定ファイルが自動で作成</li>
-              <li>バックアップが簡単</li>
-            </ul>
-            <p>これらの複雑な作業を全部Dockerが自動でやってくれます！</p>
+              <h4>Dockerの仕組み（イメージ）</h4>
+              <p>🏠 家の引っ越しに例えると：</p>
+              <ol>
+                <li>📦 必要なものを全部コンテナに詰める（Dockerイメージ）</li>
+                <li>🚛 コンテナごと新しい場所に運ぶ（サーバーの起動）</li>
+                <li>📝 住所だけ変更すれば使える（ポート設定）</li>
+              </ol>
+              <p>
+                つまり、「サーバーに必要なもの」が全部パッケージされているので、ボタン1つで始められるんです！
+              </p>
+            </div>
+          </div>
+        </div>
 
-            <h4>Dockerの仕組み（イメージ）</h4>
-            <p>🏠 家の引っ越しに例えると：</p>
-            <ol>
-              <li>📦 必要なものを全部コンテナに詰める（Dockerイメージ）</li>
-              <li>🚛 コンテナごと新しい場所に運ぶ（サーバーの起動）</li>
-              <li>📝 住所だけ変更すれば使える（ポート設定）</li>
-            </ol>
-            <p>
-              つまり、「サーバーに必要なもの」が全部パッケージされているので、ボタン1つで始められるんです！
-            </p>
+        <h3 id="tailscale">2. Tailscale（テイルスケール）とは？</h3>
+        <p>
+          Tailscaleは、友達のパソコンと安全につなぐためのソフトです。
+          これがあると：
+        </p>
+        <ul>
+          <li>インターネットを通じて安全に接続</li>
+          <li>難しいネットワーク設定が不要</li>
+          <li>友達を簡単に招待できる</li>
+        </ul>
+        <p>
+          例えるなら、「友達同士だけが入れる秘密の通路」みたいなものです。
+          知らない人は入れないので、安心して遊べます。
+        </p>
+
+        <div class="accordion">
+          <button class="accordion-button">
+            🔒 Tailscaleについてもっと詳しく
+          </button>
+          <div class="accordion-content">
+            <div class="detail-box">
+              <h4>なぜTailscaleが必要？</h4>
+              <p>
+                インターネット上で友達とつながるには、普通はとても複雑な設定が必要です。Tailscaleを使うと：
+              </p>
+              <ul>
+                <li>ルーターの設定が不要</li>
+                <li>IPアドレスの設定が自動</li>
+                <li>セキュリティの心配なし</li>
+                <li>招待した友達だけが接続可能</li>
+              </ul>
+              <p>面倒な設定を全部Tailscaleが自動でやってくれます！</p>
+
+              <h4>Tailscaleの仕組み（イメージ）</h4>
+              <p>🏰 秘密基地に例えると：</p>
+              <ol>
+                <li>🔑 メンバーに専用の鍵を配る（招待リンク）</li>
+                <li>🚪 鍵を持っている人だけが入れる（セキュリティ）</li>
+                <li>🌐 どこからでも秘密の通路で繋がる（VPN接続）</li>
+              </ol>
+              <p>
+                つまり、「友達だけが入れる安全な通路」を自動で作ってくれるんです！
+              </p>
+
+              <h4>安全性について</h4>
+              <p>Tailscaleは以下の企業でも使われている安全なソフトです：</p>
+              <ul>
+                <li>Microsoft（マイクロソフト）</li>
+                <li>GitHub（ギットハブ）</li>
+                <li>その他多くの大手企業</li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
+      <div class="card">
+        <h2 id="howto">使い方の流れ</h2>
+        <h3 id="server-setup">📱 サーバーを作る人：</h3>
+        <p><strong>1. サーバーの準備</strong></p>
+        <ol>
+          <li>host.exeを起動して各種「インストール」ボタンを押す</li>
+          <li>「サーバーを起動」ボタンを押す</li>
+          <li>「共有」ボタンから友達に招待リンクを送る</li>
+        </ol>
 
-      <h3 id="tailscale">2. Tailscale（テイルスケール）とは？</h3>
-      <p>
-        Tailscaleは、友達のパソコンと安全につなぐためのソフトです。
-        これがあると：
-      </p>
-      <ul>
-        <li>インターネットを通じて安全に接続</li>
-        <li>難しいネットワーク設定が不要</li>
-        <li>友達を簡単に招待できる</li>
-      </ul>
-      <p>
-        例えるなら、「友達同士だけが入れる秘密の通路」みたいなものです。
-        知らない人は入れないので、安心して遊べます。
-      </p>
+        <p><strong>2. Minecraftで接続</strong></p>
+        <ol>
+          <li>Minecraft Java Editionを起動する</li>
+          <li>「マルチプレイ」を選ぶ</li>
+          <li>「ダイレクト接続」を選ぶ</li>
+          <li>
+            サーバーのアドレス（<span class="highlight">localhost</span>）を入力
+          </li>
+          <li>「サーバーに接続」を押す</li>
+        </ol>
 
-      <div class="accordion">
-        <button class="accordion-button">
-          🔒 Tailscaleについてもっと詳しく
-        </button>
-        <div class="accordion-content">
-          <div class="detail-box">
-            <h4>なぜTailscaleが必要？</h4>
-            <p>
-              インターネット上で友達とつながるには、普通はとても複雑な設定が必要です。Tailscaleを使うと：
-            </p>
-            <ul>
-              <li>ルーターの設定が不要</li>
-              <li>IPアドレスの設定が自動</li>
-              <li>セキュリティの心配なし</li>
-              <li>招待した友達だけが接続可能</li>
-            </ul>
-            <p>面倒な設定を全部Tailscaleが自動でやってくれます！</p>
+        <h3 id="client-setup">🎮 参加する人：</h3>
+        <p><strong>1. 接続の準備</strong></p>
+        <ol>
+          <li>join.exeを起動して「インストール」ボタンを押す</li>
+          <li>もらった招待リンクを貼り付ける</li>
+          <li>「接続」ボタンを押す</li>
+        </ol>
 
-            <h4>Tailscaleの仕組み（イメージ）</h4>
-            <p>🏰 秘密基地に例えると：</p>
-            <ol>
-              <li>🔑 メンバーに専用の鍵を配る（招待リンク）</li>
-              <li>🚪 鍵を持っている人だけが入れる（セキュリティ）</li>
-              <li>🌐 どこからでも秘密の通路で繋がる（VPN接続）</li>
-            </ol>
-            <p>
-              つまり、「友達だけが入れる安全な通路」を自動で作ってくれるんです！
-            </p>
+        <p><strong>2. Minecraftで接続</strong></p>
+        <ol>
+          <li>Minecraft Java Editionを起動する</li>
+          <li>「マルチプレイ」を選ぶ</li>
+          <li>「ダイレクト接続」を選ぶ</li>
+          <li>
+            表示されたIPアドレス（例：<span class="highlight"
+              >100.xxx.xxx.xxx</span
+            >）を入力
+          </li>
+          <li>「サーバーに接続」を押す</li>
+        </ol>
+      </div>
+      <div class="note" id="faq">
+        <h3>よくある心配</h3>
+        <ul>
+          <li>「パソコンが壊れたりしない？」→安全なソフトなので心配なし</li>
+          <li>「知らない人が入ってこない？」→招待した友達しか入れません</li>
+          <li>
+            「アドレスはどこで見るの？」→サーバーの起動完了時に画面に表示されます
+          </li>
+        </ul>
+      </div>
 
-            <h4>安全性について</h4>
-            <p>Tailscaleは以下の企業でも使われている安全なソフトです：</p>
-            <ul>
-              <li>Microsoft（マイクロソフト）</li>
-              <li>GitHub（ギットハブ）</li>
-              <li>その他多くの大手企業</li>
-            </ul>
+      <div class="card">
+        <h2 id="requirements">必要なもの</h2>
+        <ul>
+          <li>Windows 10か11のパソコン</li>
+          <li>インターネット接続</li>
+          <li>Minecraft Java Edition</li>
+        </ul>
+      </div>
+      <div class="note">
+        <p>
+          <strong>大事なポイント：</strong><br />
+          サーバーを作る人のパソコンは、友達が遊んでいる間ずっと起動している必要があります。
+          寝る時や外出する時は、サーバーを止めておきましょう。
+        </p>
+      </div>
+
+      <div class="card">
+        <h2 id="backup">データの保存について</h2>
+        <div class="accordion">
+          <button class="accordion-button">💾 バックアップと復元</button>
+          <div class="accordion-content">
+            <div class="detail-box">
+              <h4>バックアップの取り方</h4>
+              <ol>
+                <li>サーバーを一時停止</li>
+                <li>worldフォルダをコピー</li>
+                <li>安全な場所に保存</li>
+              </ol>
+
+              <h4>復元の方法</h4>
+              <ol>
+                <li>サーバーを停止</li>
+                <li>既存のworldフォルダを削除</li>
+                <li>バックアップしたworldフォルダを配置</li>
+                <li>サーバーを再起動</li>
+              </ol>
+
+              <h4>定期的なバックアップのすすめ</h4>
+              <p>
+                大切な建物や進行状況を失わないために、定期的なバックアップをおすすめします。
+              </p>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="card">      <h2 id="howto">使い方の流れ</h2>
-      <h3 id="server-setup">📱 サーバーを作る人：</h3>
-      <p><strong>1. サーバーの準備</strong></p>
-      <ol>
-        <li>ツールを起動して「インストール」ボタンを押す</li>
-        <li>「サーバーを起動」ボタンを押す</li>
-        <li>「共有」ボタンから友達に招待リンクを送る</li>
-      </ol>
-
-      <p><strong>2. Minecraftで接続</strong></p>
-      <ol>
-        <li>Minecraft Java Editionを起動する</li>
-        <li>「マルチプレイ」を選ぶ</li>
-        <li>「ダイレクト接続」を選ぶ</li>
-        <li>
-          サーバーのアドレス（<span class="highlight">localhost</span>）を入力
-        </li>
-        <li>「サーバーに接続」を押す</li>
-      </ol>
-
-      <h3 id="client-setup">🎮 参加する人：</h3>
-      <p><strong>1. 接続の準備</strong></p>
-      <ol>
-        <li>ツールを起動して「インストール」ボタンを押す</li>
-        <li>もらった招待リンクを貼り付ける</li>
-        <li>「接続」ボタンを押す</li>
-      </ol>
-
-      <p><strong>2. Minecraftで接続</strong></p>
-      <ol>
-        <li>Minecraft Java Editionを起動する</li>
-        <li>「マルチプレイ」を選ぶ</li>
-        <li>「ダイレクト接続」を選ぶ</li>
-        <li>
-          表示されたIPアドレス（例：<span class="highlight"
-            >100.xxx.xxx.xxx</span
-          >）を入力
-        </li>
-        <li>「サーバーに接続」を押す</li>
-      </ol>
-    </div>    <div class="note" id="faq">
-      <h3>よくある心配</h3>
-      <ul>
-        <li>「パソコンが壊れたりしない？」→安全なソフトなので心配なし</li>
-        <li>「知らない人が入ってこない？」→招待した友達しか入れません</li>
-        <li>
-          「アドレスはどこで見るの？」→サーバーの起動完了時に画面に表示されます
-        </li>
-      </ul>
-    </div>
-
-    <div class="card">
-      <h2 id="requirements">必要なもの</h2>
-      <ul>
-        <li>Windows 10か11のパソコン</li>
-        <li>インターネット接続</li>
-        <li>Minecraft Java Edition</li>
-      </ul>
-    </div>
-    <div class="note">
-      <p>
-        <strong>大事なポイント：</strong><br />
-        サーバーを作る人のパソコンは、友達が遊んでいる間ずっと起動している必要があります。
-        寝る時や外出する時は、サーバーを止めておきましょう。
-      </p>
-    </div>
-
-    <div class="card">
-      <h2 id="backup">データの保存について</h2>
-      <div class="accordion">
-        <button class="accordion-button">💾 バックアップと復元</button>
-        <div class="accordion-content">
-          <div class="detail-box">
-            <h4>バックアップの取り方</h4>
-            <ol>
-              <li>サーバーを一時停止</li>
-              <li>worldフォルダをコピー</li>
-              <li>安全な場所に保存</li>
-            </ol>
-
-            <h4>復元の方法</h4>
-            <ol>
-              <li>サーバーを停止</li>
-              <li>既存のworldフォルダを削除</li>
-              <li>バックアップしたworldフォルダを配置</li>
-              <li>サーバーを再起動</li>
-            </ol>
-
-            <h4>定期的なバックアップのすすめ</h4>
-            <p>
-              大切な建物や進行状況を失わないために、定期的なバックアップをおすすめします。
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
+    </main>
 
     <script>
       // アコーディオンの動作
@@ -444,34 +463,38 @@
             content.style.maxHeight = content.scrollHeight + "px"
           }
         })
-      })      // 目次のアクティブ状態の更新
+      })
+
+      // 目次のアクティブ状態の更新
       const updateToc = () => {
-        const sections = document.querySelectorAll('h1[id], h2[id], h3[id], div[id]');
-        const tocLinks = document.querySelectorAll('.toc-link');
-        
-        let currentSection = '';
-        
-        sections.forEach(section => {
-          const sectionTop = section.offsetTop;
-          const sectionHeight = section.clientHeight;
+        const sections = document.querySelectorAll(
+          "h1[id], h2[id], h3[id], div[id]"
+        )
+        const tocLinks = document.querySelectorAll(".toc-link")
+
+        let currentSection = ""
+
+        sections.forEach((section) => {
+          const sectionTop = section.offsetTop
+          const sectionHeight = section.clientHeight
           if (window.scrollY >= sectionTop - 100) {
-            currentSection = '#' + section.getAttribute('id');
+            currentSection = "#" + section.getAttribute("id")
           }
-        });
-        
-        tocLinks.forEach(link => {
-          link.classList.remove('active');
-          if (link.getAttribute('href') === currentSection) {
-            link.classList.add('active');
+        })
+
+        tocLinks.forEach((link) => {
+          link.classList.remove("active")
+          if (link.getAttribute("href") === currentSection) {
+            link.classList.add("active")
           }
-        });
-      };
+        })
+      }
 
       // スクロール時に目次を更新
-      window.addEventListener('scroll', updateToc);
-      
+      window.addEventListener("scroll", updateToc)
+
       // 初期表示時にも実行
-      updateToc();
+      updateToc()
     </script>
   </body>
 </html>
