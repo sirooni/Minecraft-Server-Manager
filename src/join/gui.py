@@ -121,7 +121,7 @@ class JoinGUI:
                 return
 
             messagebox.showinfo(
-                "接続手順完了", "ブラウザの指示に従って接続を許可してください。"
+                "接続手順完了", "ブラウザの指示に従ってネットワークに参加してください。"
             )
             self.connect_button.config(state="normal")
 
