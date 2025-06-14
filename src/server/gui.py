@@ -106,7 +106,10 @@ class MinecraftServerGUI:
         self.status_label.pack(pady=5)
 
         self.stop_button = tk.Button(
-            self.root, text="サーバーを停止", command=self.stop_server
+            self.root,
+            text="サーバーを停止",
+            command=self.stop_server,
+            state="disabled",  # 初期状態は無効
         )
         self.stop_button.pack(pady=5)
 
@@ -133,11 +136,20 @@ class MinecraftServerGUI:
             self.docker_button.config(text="Docker をインストール", state="normal")
 
     def update_server_status(self):
+        """サーバーの状態を確認し、UIを更新する"""
         is_running = get_server_status()
         if is_running:
             self.status_label.config(text="🟢 サーバー起動中", foreground="green")
+            self.start_button.config(
+                state="disabled"
+            )  # サーバー起動中は起動ボタンを無効化
+            self.stop_button.config(state="normal")  # 停止ボタンを有効化
         else:
             self.status_label.config(text="🔴 サーバー停止中", foreground="red")
+            self.start_button.config(
+                state="normal"
+            )  # サーバー停止中は起動ボタンを有効化
+            self.stop_button.config(state="disabled")  # 停止ボタンを無効化
         self.root.after(3000, self.update_server_status)
 
     def install_tailscale_threaded(self):
@@ -221,10 +233,19 @@ class MinecraftServerGUI:
         self.log(guide)
 
     def stop_server(self):
-        if stop_server(self.log):
-            self.log("サーバーを停止しました。")
-        else:
-            messagebox.showerror("エラー", "サーバーの停止中にエラーが発生しました。")
+        """サーバーを停止する"""
+        self.log("サーバーを停止中...")
+        self.stop_button.config(state="disabled")  # 停止処理中は無効化
+
+        def stop_server_thread():
+            if stop_server(self.log):
+                self.log("サーバーを停止しました。")
+            else:
+                self.log("サーバーの停止に失敗しました。")
+                messagebox.showerror("エラー", "サーバーの停止に失敗しました。")
+            # 状態更新は自動的に行われる（update_server_status関数で）
+
+        threading.Thread(target=stop_server_thread).start()
 
     def on_closing(self):
         # サーバーが実行中なら停止を試みる
