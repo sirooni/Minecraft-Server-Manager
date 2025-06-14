@@ -75,18 +75,6 @@ class MinecraftServerGUI:
         )
         self.start_button.pack(pady=5)
 
-        self.status_label = tk.Label(self.root, text="サーバー状態を確認中…")
-        self.status_label.pack(pady=5)
-
-        self.stop_button = tk.Button(
-            self.root, text="サーバーを停止", command=self.stop_server
-        )
-        self.stop_button.pack(pady=5)
-
-        # ログ表示エリア
-        self.log_box = tk.Text(self.root, height=15, width=70, wrap="word")
-        self.log_box.pack(padx=10, pady=10)
-
         # STEP 2: サーバー共有
         step2_label = tk.Label(
             self.root, text="STEP 2: サーバーを共有する", font=("Arial", 12, "bold")
@@ -109,6 +97,18 @@ class MinecraftServerGUI:
             command=self.open_tailscale_share_page,
             width=20,
         ).pack(side=tk.LEFT, padx=5)
+
+        # ログ表示エリア
+        self.log_box = tk.Text(self.root, height=15, width=70, wrap="word")
+        self.log_box.pack(padx=10, pady=10)
+
+        self.status_label = tk.Label(self.root, text="サーバー状態を確認中…")
+        self.status_label.pack(pady=5)
+
+        self.stop_button = tk.Button(
+            self.root, text="サーバーを停止", command=self.stop_server
+        )
+        self.stop_button.pack(pady=5)
 
         # 定期的なステータス更新を開始
         self.update_server_status()
