@@ -1,0 +1,10 @@
+# Development dependencies
+-r requirements.txt
+
+# Linting and formatting
+flake8>=7.0.0
+black>=24.1.0
+isort>=5.13.0
+
+# Building
+pyinstaller>=6.4.0
