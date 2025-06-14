@@ -1,0 +1,15 @@
+services:
+  minecraft:
+    container_name: minecraft-server
+    image: itzg/minecraft-server
+    ports:
+      - "25565:25565"
+    environment:
+      EULA: "TRUE"
+      VERSION: latest
+      ONLINE_MODE: "TRUE"
+      MEMORY: "4G"
+      JVM_XX_OPTS: "-XX:MaxRAMPercentage=75.0 -XX:+UseG1GC"
+    volumes:
+      - ./minecraft/data:/data
+    restart: unless-stopped
