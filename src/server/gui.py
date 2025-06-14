@@ -1,6 +1,7 @@
 import threading
 import tkinter as tk
 from tkinter import messagebox
+import webbrowser
 
 from .core import (
     CONTAINER_NAME,
@@ -21,10 +22,9 @@ from .utils import (
 
 class MinecraftServerGUI:
     def __init__(self):
-
         self.root = tk.Tk()
         self.root.title("Minecraft Server Launcher")
-        self.root.geometry("580x460")
+        self.root.geometry("580x560")
 
         self.create_widgets()
         self.update_install_buttons()
@@ -84,8 +84,31 @@ class MinecraftServerGUI:
         self.stop_button.pack(pady=5)
 
         # ログ表示エリア
-        self.log_box = tk.Text(self.root, height=12, width=70, wrap="word")
+        self.log_box = tk.Text(self.root, height=15, width=70, wrap="word")
         self.log_box.pack(padx=10, pady=10)
+
+        # STEP 2: サーバー共有
+        step2_label = tk.Label(
+            self.root, text="STEP 2: サーバーを共有する", font=("Arial", 12, "bold")
+        )
+        step2_label.pack(pady=(5, 5))
+
+        share_frame = tk.Frame(self.root)
+        share_frame.pack(pady=(0, 10))
+
+        tk.Button(
+            share_frame,
+            text="📘 共有方法を見る",
+            command=self.show_share_guide,
+            width=20,
+        ).pack(side=tk.LEFT, padx=5)
+
+        tk.Button(
+            share_frame,
+            text="🌐 Tailscale管理画面を開く",
+            command=self.open_tailscale_share_page,
+            width=20,
+        ).pack(side=tk.LEFT, padx=5)
 
         # 定期的なステータス更新を開始
         self.update_server_status()
@@ -181,6 +204,21 @@ class MinecraftServerGUI:
             "成功", f"Minecraft サーバーが起動しました！\n接続アドレス: {ip}"
         )
         self.start_button.config(state="normal")
+
+    def open_tailscale_share_page(self):
+        self.log("🌐 Tailscale管理画面を開きます...")
+        webbrowser.open("https://login.tailscale.com/admin/machines")
+
+    def show_share_guide(self):
+        guide = (
+            "🧑‍🤝‍🧑 サーバーを友達と共有する方法\n\n"
+            "① 「🌐 Tailscale管理画面を開く」ボタンをクリック\n"
+            "② Minecraftサーバーを起動している端末を探す（例：desktop-**など）\n"
+            "③ 「Share...」を選択\n"
+            "④ 「Copy share link」を選択してコピー\n"
+            "⑤ 友達にLINEやDiscordでリンクを送信！\n\n"
+        )
+        self.log(guide)
 
     def stop_server(self):
         if stop_server(self.log):
