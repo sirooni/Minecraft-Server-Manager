@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Minecraftサーバーツールについて</title>    <style>
+      :root {
+        --primary-color: #6c5ce7;
+        --secondary-color: #a8e6cf;
+        --accent-color: #ff8b94;
+        --text-color: #2d3436;
+        --bg-light: #ffffff;
+        --bg-card: #f8f9fa;
+        --shadow-color: rgba(108, 92, 231, 0.1);
+      }
+      
+      body {
+        font-family: "メイリオ", "Yu Gothic", "Helvetica", sans-serif;
+        line-height: 1.6;
+        margin: 0;
+        padding: 0;
+        color: var(--text-color);
+        display: flex;
+        background: linear-gradient(135deg, #f6f8ff 0%, #ffffff 100%);
+      }
+        .toc {
+        width: 200px;
+        height: 100vh;
+        overflow-y: auto;
+        position: fixed;
+        left: 0;
+        top: 0;
+        background: var(--bg-light);
+        padding: 15px 10px;
+        border-right: 1px solid var(--secondary-color);
+        box-sizing: border-box;
+        box-shadow: 2px 0 10px var(--shadow-color);
+      }
+
+      .toc-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .toc-item {
+        margin: 6px 0;
+      }
+
+      .toc-link {
+        color: var(--text-color);
+        text-decoration: none;
+        display: block;
+        padding: 8px 12px;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        font-size: 0.95em;
+        border: 1px solid transparent;
+      }
+
+      .toc-link:hover {
+        background: var(--secondary-color);
+        color: var(--primary-color);
+        border: 1px solid var(--primary-color);
+        transform: scale(1.02);
+      }
+
+      .toc-link.active {
+        background: var(--primary-color);
+        color: white;
+        font-weight: bold;
+        box-shadow: 0 2px 8px var(--shadow-color);
+      }
+
+      .toc-subitem {
+        margin-left: 12px;
+        font-size: 0.9em;
+      }
+
+      .content {
+        margin-left: 220px;
+        padding: 20px;
+        max-width: 800px;
+        box-sizing: border-box;
+      }
+      h1 {
+        color: var(--primary-color);
+        border-bottom: 3px solid var(--secondary-color);
+        padding-bottom: 10px;
+        margin-bottom: 30px;
+        font-size: 2.2em;
+        text-shadow: 2px 2px 4px var(--shadow-color);
+      }
+      h2 {
+        color: var(--primary-color);
+        margin-top: 30px;
+        font-size: 1.8em;
+        position: relative;
+        padding-left: 20px;
+      }
+
+      h2::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 8px;
+        height: 25px;
+        background: var(--accent-color);
+        border-radius: 4px;
+      }
+
+      .card {
+        background: var(--bg-light);
+        border-radius: 15px;
+        padding: 25px;
+        margin: 25px 0;
+        box-shadow: 0 5px 15px var(--shadow-color);
+        border: 1px solid var(--secondary-color);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px var(--shadow-color);
+      }
+
+      .highlight {
+        background: linear-gradient(120deg, var(--secondary-color) 0%, rgba(168, 230, 207, 0.3) 100%);
+        padding: 2px 8px;
+        border-radius: 4px;
+        color: var(--primary-color);
+        font-weight: bold;
+      }
+      .note {
+        background: linear-gradient(to right, var(--accent-color) 0%, var(--accent-color) 4px, var(--bg-light) 4px, var(--bg-light) 100%);
+        padding: 20px;
+        margin: 20px 0;
+        border-radius: 8px;
+        box-shadow: 0 3px 10px var(--shadow-color);
+      }
+      /* アコーディオンのスタイル */
+      .accordion {
+        margin-bottom: 10px;
+      }
+      .accordion-button {
+        background: var(--secondary-color);
+        color: var(--primary-color);
+        font-weight: bold;
+        padding: 12px 15px;
+        border-radius: 8px;
+        border: none;
+        width: 100%;
+        text-align: left;
+        transition: all 0.3s ease;
+      }
+
+      .accordion-button:hover {
+        background: var(--primary-color);
+        color: white;
+        transform: scale(1.01);
+      }
+
+      .accordion-button:after {
+        content: "▼";
+        float: right;
+        transform: scale(0.8);
+      }
+      .accordion-button.active:after {
+        content: "▲";
+      }
+      .accordion-content {
+        padding: 15px;
+        border-radius: 8px;
+        margin-top: 8px;
+        background: var(--bg-light);
+        box-shadow: inset 0 2px 5px var(--shadow-color);
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.2s ease-out;
+      }
+      .detail-box {
+        background-color: #f8f9fa;
+        border-left: 4px solid #4caf50;
+        padding: 15px;
+        margin: 10px 0;
+      }
+    </style>  </head>
+  <body>
+    <nav class="toc">
+      <ul class="toc-list">
+        <li class="toc-item">
+          <a href="#overview" class="toc-link">このツールについて</a>
+        </li>
+        <li class="toc-item">
+          <a href="#required-software" class="toc-link">必要なソフト</a>
+          <ul class="toc-list toc-subitem">
+            <li><a href="#docker" class="toc-link">Dockerとは</a></li>
+            <li><a href="#tailscale" class="toc-link">Tailscaleとは</a></li>
+          </ul>
+        </li>
+        <li class="toc-item">
+          <a href="#howto" class="toc-link">使い方の流れ</a>
+          <ul class="toc-list toc-subitem">
+            <li><a href="#server-setup" class="toc-link">サーバーを作る人</a></li>
+            <li><a href="#client-setup" class="toc-link">参加する人</a></li>
+          </ul>
+        </li>
+        <li class="toc-item">
+          <a href="#faq" class="toc-link">よくある心配</a>
+        </li>
+        <li class="toc-item">
+          <a href="#requirements" class="toc-link">必要なもの</a>
+        </li>
+        <li class="toc-item">
+          <a href="#backup" class="toc-link">データの保存</a>
+        </li>
+      </ul>
+    </nav>
+
+    <main class="content">
+      <h1 id="overview">Minecraftサーバーツールの分かりやすい説明</h1>
+
+      <div class="card" id="overview">
+      <h2>このツールで何ができるの？</h2>
+      <p>
+        友達とMinecraftで遊ぶために必要な「サーバー」を、簡単な操作で作れるツールです。
+        普通ならコンピュータの難しい設定が必要ですが、このツールを使えばボタンを押すだけで準備できます。
+      </p>
+    </div>
+
+    <div class="card">      <h2 id="required-software">必要なソフトについて</h2>
+      <p>
+        このツールを使うには、2つの便利なソフトをインストールする必要があります：
+      </p>
+
+      <h3 id="docker">1. Docker（ドッカー）とは？</h3>
+      <p>
+        Dockerは、Minecraftサーバーを簡単に動かすためのソフトです。
+        これがあると：
+      </p>
+      <ul>
+        <li>サーバーの準備が簡単</li>
+        <li>パソコンが壊れても簡単に復旧</li>
+        <li>新しいバージョンへの更新が楽</li>
+      </ul>
+      <p>
+        例えるなら、「引っ越しの時に家具や荷物を全部コンテナに詰めておく」みたいなものです。
+        必要なものが全部まとまっているので、新しい場所でもすぐに使えます。
+      </p>
+
+      <div class="accordion">
+        <button class="accordion-button">📦 Dockerについてもっと詳しく</button>
+        <div class="accordion-content">
+          <div class="detail-box">
+            <h4>なぜDockerが必要？</h4>
+            <p>
+              Minecraftサーバーを動かすには、たくさんの設定や準備が必要です。Dockerを使うと：
+            </p>
+            <ul>
+              <li>Java（プログラムを動かすためのソフト）の設定が不要</li>
+              <li>メモリやCPUの設定が自動で最適化</li>
+              <li>サーバーの設定ファイルが自動で作成</li>
+              <li>バックアップが簡単</li>
+            </ul>
+            <p>これらの複雑な作業を全部Dockerが自動でやってくれます！</p>
+
+            <h4>Dockerの仕組み（イメージ）</h4>
+            <p>🏠 家の引っ越しに例えると：</p>
+            <ol>
+              <li>📦 必要なものを全部コンテナに詰める（Dockerイメージ）</li>
+              <li>🚛 コンテナごと新しい場所に運ぶ（サーバーの起動）</li>
+              <li>📝 住所だけ変更すれば使える（ポート設定）</li>
+            </ol>
+            <p>
+              つまり、「サーバーに必要なもの」が全部パッケージされているので、ボタン1つで始められるんです！
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <h3 id="tailscale">2. Tailscale（テイルスケール）とは？</h3>
+      <p>
+        Tailscaleは、友達のパソコンと安全につなぐためのソフトです。
+        これがあると：
+      </p>
+      <ul>
+        <li>インターネットを通じて安全に接続</li>
+        <li>難しいネットワーク設定が不要</li>
+        <li>友達を簡単に招待できる</li>
+      </ul>
+      <p>
+        例えるなら、「友達同士だけが入れる秘密の通路」みたいなものです。
+        知らない人は入れないので、安心して遊べます。
+      </p>
+
+      <div class="accordion">
+        <button class="accordion-button">
+          🔒 Tailscaleについてもっと詳しく
+        </button>
+        <div class="accordion-content">
+          <div class="detail-box">
+            <h4>なぜTailscaleが必要？</h4>
+            <p>
+              インターネット上で友達とつながるには、普通はとても複雑な設定が必要です。Tailscaleを使うと：
+            </p>
+            <ul>
+              <li>ルーターの設定が不要</li>
+              <li>IPアドレスの設定が自動</li>
+              <li>セキュリティの心配なし</li>
+              <li>招待した友達だけが接続可能</li>
+            </ul>
+            <p>面倒な設定を全部Tailscaleが自動でやってくれます！</p>
+
+            <h4>Tailscaleの仕組み（イメージ）</h4>
+            <p>🏰 秘密基地に例えると：</p>
+            <ol>
+              <li>🔑 メンバーに専用の鍵を配る（招待リンク）</li>
+              <li>🚪 鍵を持っている人だけが入れる（セキュリティ）</li>
+              <li>🌐 どこからでも秘密の通路で繋がる（VPN接続）</li>
+            </ol>
+            <p>
+              つまり、「友達だけが入れる安全な通路」を自動で作ってくれるんです！
+            </p>
+
+            <h4>安全性について</h4>
+            <p>Tailscaleは以下の企業でも使われている安全なソフトです：</p>
+            <ul>
+              <li>Microsoft（マイクロソフト）</li>
+              <li>GitHub（ギットハブ）</li>
+              <li>その他多くの大手企業</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">      <h2 id="howto">使い方の流れ</h2>
+      <h3 id="server-setup">📱 サーバーを作る人：</h3>
+      <p><strong>1. サーバーの準備</strong></p>
+      <ol>
+        <li>ツールを起動して「インストール」ボタンを押す</li>
+        <li>「サーバーを起動」ボタンを押す</li>
+        <li>「共有」ボタンから友達に招待リンクを送る</li>
+      </ol>
+
+      <p><strong>2. Minecraftで接続</strong></p>
+      <ol>
+        <li>Minecraft Java Editionを起動する</li>
+        <li>「マルチプレイ」を選ぶ</li>
+        <li>「ダイレクト接続」を選ぶ</li>
+        <li>
+          サーバーのアドレス（<span class="highlight">localhost</span>）を入力
+        </li>
+        <li>「サーバーに接続」を押す</li>
+      </ol>
+
+      <h3 id="client-setup">🎮 参加する人：</h3>
+      <p><strong>1. 接続の準備</strong></p>
+      <ol>
+        <li>ツールを起動して「インストール」ボタンを押す</li>
+        <li>もらった招待リンクを貼り付ける</li>
+        <li>「接続」ボタンを押す</li>
+      </ol>
+
+      <p><strong>2. Minecraftで接続</strong></p>
+      <ol>
+        <li>Minecraft Java Editionを起動する</li>
+        <li>「マルチプレイ」を選ぶ</li>
+        <li>「ダイレクト接続」を選ぶ</li>
+        <li>
+          表示されたIPアドレス（例：<span class="highlight"
+            >100.xxx.xxx.xxx</span
+          >）を入力
+        </li>
+        <li>「サーバーに接続」を押す</li>
+      </ol>
+    </div>    <div class="note" id="faq">
+      <h3>よくある心配</h3>
+      <ul>
+        <li>「パソコンが壊れたりしない？」→安全なソフトなので心配なし</li>
+        <li>「知らない人が入ってこない？」→招待した友達しか入れません</li>
+        <li>
+          「アドレスはどこで見るの？」→サーバーの起動完了時に画面に表示されます
+        </li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2 id="requirements">必要なもの</h2>
+      <ul>
+        <li>Windows 10か11のパソコン</li>
+        <li>インターネット接続</li>
+        <li>Minecraft Java Edition</li>
+      </ul>
+    </div>
+    <div class="note">
+      <p>
+        <strong>大事なポイント：</strong><br />
+        サーバーを作る人のパソコンは、友達が遊んでいる間ずっと起動している必要があります。
+        寝る時や外出する時は、サーバーを止めておきましょう。
+      </p>
+    </div>
+
+    <div class="card">
+      <h2 id="backup">データの保存について</h2>
+      <div class="accordion">
+        <button class="accordion-button">💾 バックアップと復元</button>
+        <div class="accordion-content">
+          <div class="detail-box">
+            <h4>バックアップの取り方</h4>
+            <ol>
+              <li>サーバーを一時停止</li>
+              <li>worldフォルダをコピー</li>
+              <li>安全な場所に保存</li>
+            </ol>
+
+            <h4>復元の方法</h4>
+            <ol>
+              <li>サーバーを停止</li>
+              <li>既存のworldフォルダを削除</li>
+              <li>バックアップしたworldフォルダを配置</li>
+              <li>サーバーを再起動</li>
+            </ol>
+
+            <h4>定期的なバックアップのすすめ</h4>
+            <p>
+              大切な建物や進行状況を失わないために、定期的なバックアップをおすすめします。
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // アコーディオンの動作
+      document.querySelectorAll(".accordion-button").forEach((button) => {
+        button.addEventListener("click", function () {
+          this.classList.toggle("active")
+          var content = this.nextElementSibling
+          if (content.style.maxHeight) {
+            content.style.maxHeight = null
+          } else {
+            content.style.maxHeight = content.scrollHeight + "px"
+          }
+        })
+      })      // 目次のアクティブ状態の更新
+      const updateToc = () => {
+        const sections = document.querySelectorAll('h1[id], h2[id], h3[id], div[id]');
+        const tocLinks = document.querySelectorAll('.toc-link');
+        
+        let currentSection = '';
+        
+        sections.forEach(section => {
+          const sectionTop = section.offsetTop;
+          const sectionHeight = section.clientHeight;
+          if (window.scrollY >= sectionTop - 100) {
+            currentSection = '#' + section.getAttribute('id');
+          }
+        });
+        
+        tocLinks.forEach(link => {
+          link.classList.remove('active');
+          if (link.getAttribute('href') === currentSection) {
+            link.classList.add('active');
+          }
+        });
+      };
+
+      // スクロール時に目次を更新
+      window.addEventListener('scroll', updateToc);
+      
+      // 初期表示時にも実行
+      updateToc();
+    </script>
+  </body>
+</html>
