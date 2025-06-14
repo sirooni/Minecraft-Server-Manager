@@ -11,7 +11,7 @@ from .utils import is_installed
 class MinecraftServerGUI:
     def __init__(self):
         self.root = tk.Tk()
-        self.root.title("Minecraft Server Launcher")
+        self.root.title("Minecraft Server Hosting")
         self.root.geometry("580x560")
 
         self.create_widgets()
