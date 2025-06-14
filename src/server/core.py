@@ -1,6 +1,12 @@
 from tkinter import messagebox
 
-from .utils import run_silently, wait_for_docker_ready, wait_for_minecraft_ready
+from .utils import (
+    is_installed,
+    run_silently,
+    start_app_if_not_running,
+    wait_for_docker_ready,
+    wait_for_minecraft_ready,
+)
 
 # コンテナ名の共通定義
 CONTAINER_NAME = "minecraft-server"
@@ -62,3 +68,63 @@ def get_server_status():
         return result.stdout.strip() == "true"
     except:
         return False
+
+
+def run_server(log_callback=None) -> tuple[bool, str]:
+    """
+    Minecraftサーバーを起動する
+
+    Args:
+        log_callback: ログ出力用のコールバック関数
+
+    Returns:
+        tuple[bool, str]: (成功したかどうか, IPアドレスまたはエラーメッセージ)
+    """
+    # 前提条件チェック
+    if not is_installed("tailscale"):
+        message = "Tailscale が見つかりません。インストールしてください。"
+        if log_callback:
+            log_callback(message)
+        messagebox.showwarning("未インストール", message)
+        return False, message
+
+    if not is_installed("docker"):
+        message = "Docker が見つかりません。インストールしてください。"
+        if log_callback:
+            log_callback(message)
+        messagebox.showwarning("未インストール", message)
+        return False, message
+
+    # アプリケーションの起動
+    start_app_if_not_running(
+        "tailscale-ipn.exe", r"C:\Program Files\Tailscale IPN\tailscale-ipn.exe"
+    )
+    start_app_if_not_running(
+        "Docker Desktop.exe", r"C:\Program Files\Docker\Docker\Docker Desktop.exe"
+    )
+
+    # Docker Engineの準備待ち
+    if not wait_for_docker_ready(log_callback):
+        message = "Docker Engine の起動に失敗しました"
+        messagebox.showerror("エラー", message)
+        return False, message
+
+    # Tailscaleの起動と接続
+    if not start_tailscale(log_callback):
+        return False, "Tailscaleの起動に失敗しました"
+
+    ip = get_tailscale_ip(log_callback)
+    if not ip:
+        return False, "Tailscale IPの取得に失敗しました"
+
+    # Dockerコンテナの起動
+    if not start_docker(log_callback):
+        return False, "Dockerの起動に失敗しました"
+
+    # Minecraftサーバーの準備待ち
+    if not wait_for_minecraft_ready(CONTAINER_NAME, log_callback):
+        message = "Minecraft サーバーの準備完了を検出できませんでした"
+        messagebox.showerror("エラー", message)
+        return False, message
+
+    return True, ip

@@ -1,23 +1,11 @@
 import threading
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import messagebox, ttk
 import webbrowser
 
-from .core import (
-    CONTAINER_NAME,
-    get_server_status,
-    get_tailscale_ip,
-    start_docker,
-    start_tailscale,
-    stop_server,
-)
+from .core import get_server_status, run_server, stop_server
 from .installer import install_docker, install_tailscale
-from .utils import (
-    is_installed,
-    start_app_if_not_running,
-    wait_for_docker_ready,
-    wait_for_minecraft_ready,
-)
+from .utils import is_installed
 
 
 class MinecraftServerGUI:
@@ -161,76 +149,20 @@ class MinecraftServerGUI:
         self.update_install_buttons()
 
     def start_server(self):
+        """サーバーを起動する"""
         self.start_button.config(state="disabled")
-        threading.Thread(target=self.run_server).start()
 
-    def run_server(self):
-        if not is_installed("tailscale"):
-            self.log("Tailscale が見つかりません。インストールしてください。")
-            messagebox.showwarning(
-                "未インストール",
-                "Tailscale が見つかりません。インストールしてください。",
-            )
-            self.start_button.config(state="normal")
-            return
-        if not is_installed("docker"):
-            self.log("Docker が見つかりません。インストールしてください。")
-            messagebox.showwarning(
-                "未インストール", "Docker が見つかりません。インストールしてください。"
-            )
-            self.start_button.config(state="normal")
-            return
+        def start_server_thread():
+            success, result = run_server(self.log)
+            if success:
+                self.log(f"\nサーバー起動完了！\n接続アドレス: {result}")
+                messagebox.showinfo(
+                    "成功",
+                    f"Minecraft サーバーが起動しました！\n接続アドレス: {result}",
+                )
+            # 状態更新は自動的に行われる（update_server_status関数で）
 
-        start_app_if_not_running(
-            "tailscale-ipn.exe", r"C:\Program Files\Tailscale IPN\tailscale-ipn.exe"
-        )
-        start_app_if_not_running(
-            "Docker Desktop.exe", r"C:\Program Files\Docker\Docker\Docker Desktop.exe"
-        )
-
-        if not wait_for_docker_ready(self.log):
-            messagebox.showerror("エラー", "Docker Engine の起動に失敗しました")
-            self.start_button.config(state="normal")
-            return
-
-        if not start_tailscale(self.log):
-            self.start_button.config(state="normal")
-            return
-        ip = get_tailscale_ip(self.log)
-        if not ip:
-            self.start_button.config(state="normal")
-            return
-        if not start_docker(self.log):
-            self.start_button.config(state="normal")
-            return
-
-        if not wait_for_minecraft_ready(CONTAINER_NAME, self.log):
-            messagebox.showerror(
-                "エラー", "Minecraft サーバーの準備完了を検出できませんでした。"
-            )
-            self.start_button.config(state="normal")
-            return
-
-        self.log(f"\nサーバー起動完了！\n接続アドレス: {ip}")
-        messagebox.showinfo(
-            "成功", f"Minecraft サーバーが起動しました！\n接続アドレス: {ip}"
-        )
-        self.start_button.config(state="normal")
-
-    def open_tailscale_share_page(self):
-        self.log("🌐 Tailscale管理画面を開きます...")
-        webbrowser.open("https://login.tailscale.com/admin/machines")
-
-    def show_share_guide(self):
-        guide = (
-            "🧑‍🤝‍🧑 サーバーを友達と共有する方法\n\n"
-            "① 「🌐 Tailscale管理画面を開く」ボタンをクリック\n"
-            "② Minecraftサーバーを起動している端末を探す（例：desktop-**など）\n"
-            "③ 「Share...」を選択\n"
-            "④ 「Copy share link」を選択してコピー\n"
-            "⑤ 友達にLINEやDiscordでリンクを送信！\n\n"
-        )
-        self.log(guide)
+        threading.Thread(target=start_server_thread).start()
 
     def stop_server(self):
         """サーバーを停止する"""
@@ -246,6 +178,21 @@ class MinecraftServerGUI:
             # 状態更新は自動的に行われる（update_server_status関数で）
 
         threading.Thread(target=stop_server_thread).start()
+
+    def open_tailscale_share_page(self):
+        self.log("🌐 Tailscale管理画面を開きます...")
+        webbrowser.open("https://login.tailscale.com/admin/machines")
+
+    def show_share_guide(self):
+        guide = (
+            "🧑‍🤝‍🧑 サーバーを友達と共有する方法\n\n"
+            "① 「🌐 Tailscale管理画面を開く」ボタンをクリック\n"
+            "② Minecraftサーバーを起動している端末を探す（例：desktop-**など）\n"
+            "③ 「Share...」を選択\n"
+            "④ 「Copy share link」を選択してコピー\n"
+            "⑤ 友達にLINEやDiscordでリンクを送信！\n\n"
+        )
+        self.log(guide)
 
     def on_closing(self):
         # サーバーが実行中なら停止を試みる
